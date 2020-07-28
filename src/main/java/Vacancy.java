@@ -9,8 +9,8 @@ public class Vacancy {
     private String title;
     private String companyName;
     private String description;
-    private String location;
-   // private List<String> location = new ArrayList<>();
+//    private String location;
+    private List<String> location = new ArrayList<>();
 
 
 }

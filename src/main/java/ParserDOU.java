@@ -12,26 +12,28 @@ public class ParserDOU {
     private static final String ELEMENTS_LIST_PATH = "div.l-items ul.lt li.l-vacancy";
     private static final String ELEMENT_PATTERN = "div.vacancy div.title ";
 
-    public static void main(String[] args) throws Exception {
 
-        List<Vacancy> vacancyList = new ArrayList<>();
+    public List<Vacancy> generateVacanciesList() throws Exception {
+        List<Vacancy> vacanciesList = new ArrayList<>();
         Document doc = Jsoup.connect(HTTP).get();
         Elements list = doc.select(ELEMENTS_LIST_PATH);
 
-
-        //list
         for (Element element : list) {
             Vacancy vacancy = new Vacancy();
 
             vacancy.setTitle(element.select(ELEMENT_PATTERN + "a.vt").text());
             vacancy.setCompanyName(element.select(ELEMENT_PATTERN + "strong a.company").text());
-            vacancy.setLocation(element.select(ELEMENT_PATTERN + "span.cities").text());
             vacancy.setDescription(element.select(ELEMENT_PATTERN.split(" ")[0] + " div.sh-info").text());
 
-            vacancyList.add(vacancy);
-            System.out.println(vacancy);
-
+            for (String str : element.select(ELEMENT_PATTERN + "span.cities").text().split(", ")) {
+                vacancy.getLocation().add(str);
+            }
+            vacanciesList.add(vacancy);
         }
+        return vacanciesList;
 
     }
+
+
+
 }
