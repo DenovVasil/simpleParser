@@ -1,3 +1,5 @@
+package com.introlab.dou;
+
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ public class Vacancy {
     private String title;
     private String companyName;
     private String description;
-//    private String location;
     private List<String> location = new ArrayList<>();
 
 
