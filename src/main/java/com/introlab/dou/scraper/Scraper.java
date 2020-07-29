@@ -1,4 +1,4 @@
-package scraper;
+package com.introlab.dou.scraper;
 
 import org.jsoup.nodes.Document;
 
@@ -7,4 +7,5 @@ import java.io.IOException;
 public interface Scraper {
 
     Document downloadDocument(String url) throws IOException;
+
 }

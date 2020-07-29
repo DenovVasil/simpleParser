@@ -1,8 +1,8 @@
-package scraper.impl;
+package com.introlab.dou.scraper.impl;
 
-import org.jsoup.Jsoup;
+import com.introlab.dou.scraper.Scraper;
+import com.introlab.dou.util.JsoupUtil;
 import org.jsoup.nodes.Document;
-import scraper.Scraper;
 
 import java.io.IOException;
 
@@ -10,6 +10,6 @@ public class DouScraper implements Scraper {
 
     @Override
     public Document downloadDocument(String url) throws IOException {
-        return Jsoup.connect(url).get();
+        return JsoupUtil.get(url);
     }
 }

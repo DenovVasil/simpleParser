@@ -1,4 +1,4 @@
-package com.introlab.dou;
+package com.introlab.dou.domain;
 
 import lombok.Data;
 
@@ -12,6 +12,5 @@ public class Vacancy {
     private String companyName;
     private String description;
     private List<String> location = new ArrayList<>();
-
 
 }
