@@ -21,6 +21,8 @@ public class DouParser implements Parser {
 
         Elements list = document.select(ELEMENTS_LIST_PATH);
 
+        System.out.println(list.size());
+
         for (Element element : list) {
             Vacancy vacancy = new Vacancy();
 

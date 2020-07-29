@@ -13,12 +13,22 @@ public class JsoupUtil {
         return Jsoup.connect(url).get();
     }
 
-    public static Connection.Response post(String url, Map<String, String> headers, Map<String, String> payload) throws IOException {
+    public static Connection.Response postResponse(String url, Map<String, String> headers, Map<String, String> payload) throws IOException {
         return Jsoup.connect(url)
                 .ignoreContentType(true)
                 .headers(headers)
                 .data(payload)
                 .method(Connection.Method.POST)
                 .execute();
+    }
+
+    public static Document post( String url, Map<String, String> headers,  Map<String, String> payload) throws IOException{
+        return Jsoup.connect(url)
+                .headers(headers)
+                .data(payload)
+                .ignoreContentType(true)
+                .timeout(3000)
+                .post();
+
     }
 }
