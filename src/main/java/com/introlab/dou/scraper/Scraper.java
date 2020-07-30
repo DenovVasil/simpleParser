@@ -8,6 +8,6 @@ import java.util.Map;
 public interface Scraper {
 
     Document getDownloadDocument(String url) throws IOException;
-    Document postDownloadDocument( String url, Map<String, String> headers, Map<String, String> payload) throws IOException;
+    String postDownloadDocument( String url, Map<String, String> headers, Map<String, String> payload) throws IOException;
 
 }

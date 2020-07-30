@@ -18,14 +18,24 @@ public class DouParser implements Parser {
     @Override
     public List<Vacancy> parse(Document document) {
         List<Vacancy> vacanciesList = new ArrayList<>();
-
         Elements list = document.select(ELEMENTS_LIST_PATH);
 
-        System.out.println(list.size());
+       return getVacancyField(list);
+    }
 
-        for (Element element : list) {
+    public List<Vacancy>parsePost(Document document){
+        List<Vacancy> vacanciesList = new ArrayList<>();
+        Elements list = document.select("li.l-vacancy");
+
+        return getVacancyField(list);
+    }
+
+    private List<Vacancy> getVacancyField(Elements list){
+        List<Vacancy> vacanciesList = new ArrayList<>();
+
+
+        for(Element element : list){
             Vacancy vacancy = new Vacancy();
-
             vacancy.setTitle(element.select(ELEMENT_PATTERN + "a.vt").text());
             vacancy.setCompanyName(element.select(ELEMENT_PATTERN + "strong a.company").text());
             vacancy.setDescription(element.select(ELEMENT_PATTERN.split(" ")[0] + " div.sh-info").text());
@@ -35,6 +45,7 @@ public class DouParser implements Parser {
             }
             vacanciesList.add(vacancy);
         }
+
         return vacanciesList;
     }
 }

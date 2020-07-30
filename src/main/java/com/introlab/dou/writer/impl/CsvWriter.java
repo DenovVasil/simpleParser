@@ -12,13 +12,11 @@ import java.util.List;
 public class CsvWriter implements Writer {
 
     String[] HEADERS = {"\"title\"", "\"company_name\"", "\"description\"", "\"location\""};
-    static int count = 1;
 
     @Override
     public boolean export(List<Vacancy> vacancies) throws IOException {
+        FileWriter out = new FileWriter("/home/user/Desktop/firstTask/simpleParser/src/resources/vacancy.csv");
 
-        FileWriter out = new FileWriter("/home/user/Desktop/firstTask/simpleParser/src/resources/vacancy" + count + ".csv");
-        count++;
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(HEADERS))) {
             vacancies.forEach(vacancy -> {
                 try {

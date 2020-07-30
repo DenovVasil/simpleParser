@@ -1,4 +1,4 @@
-package com.introlab.dou;
+package com.introlab.dou.domain;
 
 import lombok.Data;
 
@@ -6,4 +6,5 @@ import lombok.Data;
 public class Response {
     String html;
     Boolean last;
+    int num ;
 }

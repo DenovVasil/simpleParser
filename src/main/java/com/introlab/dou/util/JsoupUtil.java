@@ -13,13 +13,14 @@ public class JsoupUtil {
         return Jsoup.connect(url).get();
     }
 
-    public static Connection.Response postResponse(String url, Map<String, String> headers, Map<String, String> payload) throws IOException {
+    public static String postResponse(String url, Map<String, String> headers, Map<String, String> payload) throws IOException{
         return Jsoup.connect(url)
                 .ignoreContentType(true)
                 .headers(headers)
                 .data(payload)
                 .method(Connection.Method.POST)
-                .execute();
+                .execute()
+                .body();
     }
 
     public static Document post( String url, Map<String, String> headers,  Map<String, String> payload) throws IOException{
@@ -31,4 +32,16 @@ public class JsoupUtil {
                 .post();
 
     }
+
+    /*
+    public static Connection.Response postResponse(String url, Map<String, String> headers, Map<String, String> payload) throws IOException {
+        return Jsoup.connect(url)
+                .ignoreContentType(true)
+                .headers(headers)
+                .data(payload)
+                .method(Connection.Method.POST)
+                .execute();
+    }
+
+ */
 }

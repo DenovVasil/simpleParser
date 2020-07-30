@@ -1,92 +1,63 @@
 package com.introlab.dou;
 
 import com.google.gson.Gson;
-import com.introlab.dou.parser.Parser;
+import com.introlab.dou.domain.Response;
+import com.introlab.dou.domain.Vacancy;
 import com.introlab.dou.parser.impl.DouParser;
 import com.introlab.dou.scraper.Scraper;
 import com.introlab.dou.scraper.impl.DouScraper;
-import com.introlab.dou.util.JsoupUtil;
 import com.introlab.dou.writer.Writer;
 import com.introlab.dou.writer.impl.CsvWriter;
-import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 
+import javax.lang.model.util.Elements;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Main {
 
-    private static final String URL = "https://jobs.dou.ua/vacancies/?category=Java";
-    public static final String XHR_LOAD_CATEGORY_JAVA = "https://jobs.dou.ua/vacancies/xhr-load/?category=Java";
-    //  private static final String URL_FOR_TOKEN = "https://jobs.dou.ua/";
-    private static final String TOKEN_PATTERN = "input[name]";  // yt
+    private static final String URL_POST = "https://jobs.dou.ua/vacancies/xhr-load/?category=Java";
+    private static final String TOKEN_PATTERN = "input[name]";
 
 
     public static void main(String[] args) throws IOException {
-//        Scraper scraper = new DouScraper();
-//        Parser parser = new DouParser();
-//        Writer writer = new CsvWriter();
-//
-//        writer.export(
-//                parser.parse(
-//                        scraper.downloadDocument(URL)
-//                )
-//        );
+        Gson gson = new Gson();
+        Scraper scraper = new DouScraper();
+        DouParser parser = new DouParser();
+        Writer writer = new CsvWriter();
+        List<Vacancy> list = new ArrayList<>();
+        Response response;
+        Document doc;
 
-/*
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Cookie", "csrftoken=pOsIpMDtbRYMxFtwAjcJDOHc74G0mE2ooGDcY5Vt1eJ5H9Bq01GaKrHVvjytw0RX; _ga=GA1.2.2125210855.1595848999; _gid=GA1.2.296416754.1595848999");
-        headers.put("Referer", "https://jobs.dou.ua/vacancies/?category=Java");
-
+        int count = 0;
         Map<String, String> payload = new HashMap<>();
-        payload.put("csrfmiddlewaretoken", "e0kpnLiuyA2Pj4z5EDXNAjKJK0keBdpjdSvTW4AuoXN8tyHZ4lreHWKs8fcHLzeS");
-        payload.put("count", "20");
-
-        String response = JsoupUtil.post(
-                "https://jobs.dou.ua/vacancies/xhr-load/?category=Java",
-                    headers, payload).body();
-        System.out.println(response);
-*/
-
-        Document doc = Jsoup.connect(URL).get();
-        Map<String, String> payload = new HashMap<>();
-        //   payload.put("csrfmiddlewaretoken", doc.select("input[name=csrfmiddlewaretoken]").val());
-        payload.put("csrfmiddlewaretoken", "KzVyeFs04PkB33BKpU8ectQ2ig5Xbj0OJr62NYK0Uc5UdxJEPCCFj6QLGvXqlFPn");
-
-        payload.put("count", "100");
-
+        //   Document token = Jsoup.connect(URL).get();
+        //   payload.put("csrfmiddlewaretoken", token.select("input[name=csrfmiddlewaretoken]").val());          // возаращяет норм токен, но летит 403
+        payload.put("csrfmiddlewaretoken", "gKPdEyFEVZPmjU3xLAB8lspEULHKaK5VfC0HdRXELmAFtobrbi5zs5pni0zdk6Uu"); // а с хардкодом все гуд
+        payload.put("count", String.valueOf(count));
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Cookie", "csrftoken=pOsIpMDtbRYMxFtwAjcJDOHc74G0mE2ooGDcY5Vt1eJ5H9Bq01GaKrHVvjytw0RX; _ga=GA1.2.2125210855.1595848999; _gid=GA1.2.296416754.1595848999; _gat=1");
         headers.put("Referer", "https://jobs.dou.ua/vacancies/?category=Java");
-        //    headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
-        Writer w = new CsvWriter();
+        do {
+            response = gson.fromJson(scraper.postDownloadDocument(URL_POST, headers, payload), Response.class);
+            doc = Jsoup.parse(response.getHtml());
+            list.addAll(parser.parsePost(doc));
+            if (!response.getLast()) {
+                payload.put("count", String.valueOf(count += 40));
+            }
 
-        Scraper scraper = new DouScraper();
-        Document doc2 = scraper.postDownloadDocument(URL, headers, payload);
+        } while (!response.getLast());
 
-        Parser parser = new DouParser();
-        w.export(parser.parse(doc2));
-
-
-        payload.put("count", "140");
-        doc2 = scraper.postDownloadDocument(XHR_LOAD_CATEGORY_JAVA, headers, payload);
-        String normalizedHTML = StringEscapeUtils.unescapeHtml4(doc2.body().html());
-        Response response = new Gson().fromJson(normalizedHTML, Response.class);
-        w.export(parser.parse(doc2));
-
-
-        // Parser parser = new DouParser();
-
-        // parser.parse(scraper.downloadDocument())
-
+        writer.export(list);
 
     }
+
 }
