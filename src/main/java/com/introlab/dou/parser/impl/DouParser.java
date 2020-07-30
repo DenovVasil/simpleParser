@@ -2,7 +2,6 @@ package com.introlab.dou.parser.impl;
 
 import com.introlab.dou.domain.Vacancy;
 import com.introlab.dou.parser.Parser;
-import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -17,24 +16,21 @@ public class DouParser implements Parser {
 
     @Override
     public List<Vacancy> parse(Document document) {
-        List<Vacancy> vacanciesList = new ArrayList<>();
         Elements list = document.select(ELEMENTS_LIST_PATH);
-
-       return getVacancyField(list);
-    }
-
-    public List<Vacancy>parsePost(Document document){
-        List<Vacancy> vacanciesList = new ArrayList<>();
-        Elements list = document.select("li.l-vacancy");
-
         return getVacancyField(list);
     }
 
-    private List<Vacancy> getVacancyField(Elements list){
+    @Override
+    public List<Vacancy> parsePost(Document document) {
+        Elements list = document.select("li.l-vacancy");
+        return getVacancyField(list);
+    }
+
+    private List<Vacancy> getVacancyField(Elements list) {
         List<Vacancy> vacanciesList = new ArrayList<>();
 
 
-        for(Element element : list){
+        for (Element element : list) {
             Vacancy vacancy = new Vacancy();
             vacancy.setTitle(element.select(ELEMENT_PATTERN + "a.vt").text());
             vacancy.setCompanyName(element.select(ELEMENT_PATTERN + "strong a.company").text());

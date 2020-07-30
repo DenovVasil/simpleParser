@@ -13,6 +13,10 @@ public class JsoupUtil {
         return Jsoup.connect(url).get();
     }
 
+    public static Connection.Response getResponse(String url) throws IOException {
+        return Jsoup.connect(url).method(Connection.Method.GET).execute();
+    }
+
     public static String postResponse(String url, Map<String, String> headers, Map<String, String> payload) throws IOException{
         return Jsoup.connect(url)
                 .ignoreContentType(true)

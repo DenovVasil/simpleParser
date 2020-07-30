@@ -8,4 +8,6 @@ import java.util.List;
 public interface Parser {
 
     List<Vacancy> parse(Document document);
+
+    List<Vacancy> parsePost(Document document);
 }
